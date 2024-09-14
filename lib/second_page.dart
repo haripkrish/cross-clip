@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text('Error', style: style));
 
                 final data = snap.data;
-                if (data != null) return Text('$data second(s)', style: style);
+                if (data != null) return Text('${data.data} second(s)', style: style);
                 if (data == null) return Text('$note_event_stream', style: style);
 
 

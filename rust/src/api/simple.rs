@@ -16,7 +16,7 @@ pub fn init_app() {
 
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct NoteStorage {
     pub data: HashMap<String, Vec<HashMap<String, String>>>
 }
@@ -137,21 +137,19 @@ static NOTES_EVENT_STREAM: RwLock<Option<StreamSink<NoteStorage>>> = RwLock::new
 //pub fn note_event_stream(sink: SteamSink
 
 pub fn notes_event_stream(s: StreamSink<NoteStorage>) -> Result<()> {
-    const ONE_SECOND: Duration = Duration::from_secs(2);
-    let mut stream = NOTES_EVENT_STREAM.write().unwrap();
-    *stream = Some(s);
+
+    println!("Note event called");
     let mut note_storage = NoteStorage::new();
-    println!("Set note by user device ID");
-    note_storage.set_note("Hari_device1", "Note_header1", "Note_value1");
+    let mut ticks = 0;
     loop {
-        //s.add(NOTES_EVENT_STREAM);
-        note_storage.set_note("Hari_device1", "Note_header1", "Note_value1");
+        s.add(note_storage.clone());
         sleep(ONE_SECOND);
         if 100 == i32::MAX {
             break;
         }
-
+        println!("Set note by user device ID");
+        note_storage.set_note("Hari_device1", "Note_header1", &format!("{}{}", "", ticks));
+        ticks += 1;
     }
-
     Ok(())
 }
