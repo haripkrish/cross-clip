@@ -3,11 +3,6 @@ pub fn greet(name: String) -> String {
     format!("Hello yo1aa, {name}!")
 }
 
-#[flutter_rust_bridge::frb(sync)] // Synchronous mode for simplicity of the demo
-pub fn greet_me(name: String) -> String {
-    format!("Hello yo me, {name}!")
-}
-
 #[flutter_rust_bridge::frb(sync)]
 pub fn test_1() -> String {
     format!("test")
