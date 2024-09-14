@@ -22,7 +22,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AnyhowException dco_decode_AnyhowException(dynamic raw);
 
   @protected
+  Map<String, String> dco_decode_Map_String_String(dynamic raw);
+
+  @protected
+  Map<String, List<Map<String, String>>>
+      dco_decode_Map_String_list_Map_String_String(dynamic raw);
+
+  @protected
   RustStreamSink<int> dco_decode_StreamSink_i_32_Sse(dynamic raw);
+
+  @protected
+  RustStreamSink<NoteStorage> dco_decode_StreamSink_note_storage_Sse(
+      dynamic raw);
 
   @protected
   String dco_decode_String(dynamic raw);
@@ -31,7 +42,27 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_i_32(dynamic raw);
 
   @protected
+  List<Map<String, String>> dco_decode_list_Map_String_String(dynamic raw);
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  List<(String, List<Map<String, String>>)>
+      dco_decode_list_record_string_list_map_string_string(dynamic raw);
+
+  @protected
+  List<(String, String)> dco_decode_list_record_string_string(dynamic raw);
+
+  @protected
+  NoteStorage dco_decode_note_storage(dynamic raw);
+
+  @protected
+  (String, List<Map<String, String>>)
+      dco_decode_record_string_list_map_string_string(dynamic raw);
+
+  @protected
+  (String, String) dco_decode_record_string_string(dynamic raw);
 
   @protected
   int dco_decode_u_8(dynamic raw);
@@ -43,7 +74,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer);
 
   @protected
+  Map<String, String> sse_decode_Map_String_String(
+      SseDeserializer deserializer);
+
+  @protected
+  Map<String, List<Map<String, String>>>
+      sse_decode_Map_String_list_Map_String_String(
+          SseDeserializer deserializer);
+
+  @protected
   RustStreamSink<int> sse_decode_StreamSink_i_32_Sse(
+      SseDeserializer deserializer);
+
+  @protected
+  RustStreamSink<NoteStorage> sse_decode_StreamSink_note_storage_Sse(
       SseDeserializer deserializer);
 
   @protected
@@ -53,7 +97,32 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
+  List<Map<String, String>> sse_decode_list_Map_String_String(
+      SseDeserializer deserializer);
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  List<(String, List<Map<String, String>>)>
+      sse_decode_list_record_string_list_map_string_string(
+          SseDeserializer deserializer);
+
+  @protected
+  List<(String, String)> sse_decode_list_record_string_string(
+      SseDeserializer deserializer);
+
+  @protected
+  NoteStorage sse_decode_note_storage(SseDeserializer deserializer);
+
+  @protected
+  (String, List<Map<String, String>>)
+      sse_decode_record_string_list_map_string_string(
+          SseDeserializer deserializer);
+
+  @protected
+  (String, String) sse_decode_record_string_string(
+      SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_8(SseDeserializer deserializer);
@@ -69,8 +138,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       AnyhowException self, SseSerializer serializer);
 
   @protected
+  void sse_encode_Map_String_String(
+      Map<String, String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_Map_String_list_Map_String_String(
+      Map<String, List<Map<String, String>>> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_StreamSink_i_32_Sse(
       RustStreamSink<int> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_StreamSink_note_storage_Sse(
+      RustStreamSink<NoteStorage> self, SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
@@ -79,8 +160,31 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_i_32(int self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_Map_String_String(
+      List<Map<String, String>> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_prim_u_8_strict(
       Uint8List self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_record_string_list_map_string_string(
+      List<(String, List<Map<String, String>>)> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_record_string_string(
+      List<(String, String)> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_note_storage(NoteStorage self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_string_list_map_string_string(
+      (String, List<Map<String, String>>) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_string_string(
+      (String, String) self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_8(int self, SseSerializer serializer);

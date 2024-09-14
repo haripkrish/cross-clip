@@ -17,8 +17,8 @@ pub fn init_app() {
 use std::collections::HashMap;
 
 #[derive(Debug)]
-struct NoteStorage {
-    data: HashMap<String, Vec<HashMap<String, String>>>
+pub struct NoteStorage {
+    pub data: HashMap<String, Vec<HashMap<String, String>>>
 }
 
 impl NoteStorage {
@@ -111,6 +111,7 @@ use std::{thread::sleep, time::Duration};
 use crate::frb_generated::StreamSink;
 
 const ONE_SECOND: Duration = Duration::from_secs(2);
+//static NOTE_STREAM: RwLock<Option<StreamSink<NoteStorage>>> = RwLock::new(None);
 
 // can't omit the return type yet, this is a bug
 //#[flutter_rust_bridge::frb(sync)]
@@ -120,11 +121,37 @@ pub fn tick(sink: StreamSink<i32>) -> Result<()> {
     loop {
         sink.add(ticks);
         sleep(ONE_SECOND);
-        println!("tick called in loop");
         if ticks == i32::MAX {
             break;
         }
         ticks += 1;
     }
+    Ok(())
+}
+
+
+use std::sync::{RwLock, TryLockResult};
+
+static NOTES_EVENT_STREAM: RwLock<Option<StreamSink<NoteStorage>>> = RwLock::new(None);
+
+//pub fn note_event_stream(sink: SteamSink
+
+pub fn notes_event_stream(s: StreamSink<NoteStorage>) -> Result<()> {
+    const ONE_SECOND: Duration = Duration::from_secs(2);
+    let mut stream = NOTES_EVENT_STREAM.write().unwrap();
+    *stream = Some(s);
+    let mut note_storage = NoteStorage::new();
+    println!("Set note by user device ID");
+    note_storage.set_note("Hari_device1", "Note_header1", "Note_value1");
+    loop {
+        //s.add(NOTES_EVENT_STREAM);
+        note_storage.set_note("Hari_device1", "Note_header1", "Note_value1");
+        sleep(ONE_SECOND);
+        if 100 == i32::MAX {
+            break;
+        }
+
+    }
+
     Ok(())
 }

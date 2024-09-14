@@ -518,6 +518,7 @@ dependencies = [
  "anyhow",
  "flutter_rust_bridge",
  "futures",
+ "once_cell",
 ]
 
 [[package]]

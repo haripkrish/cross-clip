@@ -7,7 +7,6 @@ import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These functions are ignored because they are not marked as `pub`: `get_note`, `main1`, `new`, `set_note`
-// These types are ignored because they are not used by any `pub` functions: `NoteStorage`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
 
 String greet({required String name}) =>
@@ -18,3 +17,24 @@ String test1() => RustLib.instance.api.crateApiSimpleTest1();
 String test4() => RustLib.instance.api.crateApiSimpleTest4();
 
 Stream<int> tick() => RustLib.instance.api.crateApiSimpleTick();
+
+Stream<NoteStorage> notesEventStream() =>
+    RustLib.instance.api.crateApiSimpleNotesEventStream();
+
+class NoteStorage {
+  final Map<String, List<Map<String, String>>> data;
+
+  const NoteStorage({
+    required this.data,
+  });
+
+  @override
+  int get hashCode => data.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NoteStorage &&
+          runtimeType == other.runtimeType &&
+          data == other.data;
+}

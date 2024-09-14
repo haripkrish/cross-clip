@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cross_clip/src/rust/api/simple.dart';
-import 'package:cross_clip/src/rust/frb_generated.dart';
-import 'second_page.dart';
-//
-// import 'package:flutter/material.dart';
+import 'main.dart';
 
-Future<void> main() async {
-  await RustLib.init();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+class SecondPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -34,12 +24,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Stream<int> ticks;
+  late Stream<NoteStorage> note_event_stream;
 
   @override
   void initState() {
     super.initState();
-    ticks = tick();
+    note_event_stream = notesEventStream();
   }
 
   @override
@@ -53,8 +43,13 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text("Time since starting Rust stream"),
-            StreamBuilder<int>(
-              stream: ticks,
+            StreamBuilder<NoteStorage>(
+              stream: note_event_stream,
+              // builder: (context, data) {
+              //   final style = Theme.of(context).textTheme.headlineMedium;
+              //   if (data.hasData) {
+              //     return Text('${data.data.toString()} second(s)', style: style);
+              // }
               builder: (context, snap) {
                 final style = Theme.of(context).textTheme.headlineMedium;
                 final error = snap.error;
@@ -65,6 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 final data = snap.data;
                 if (data != null) return Text('$data second(s)', style: style);
+                if (data == null) return Text('$note_event_stream', style: style);
+
 
                 return const CircularProgressIndicator();
               },
@@ -73,10 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SecondPage()),
+                  MaterialPageRoute(builder: (context) => MyApp()),
                 );
               },
-              child: Text('Go to Second Page\n Result1: `${test4()}`'),
+              child: Text('Go to first Page'),
             ),
           ],
         ),
