@@ -17,3 +17,7 @@ Consider : Topic name = pub-key
 Decide on the attributes.
 
 If a new device joins, broadcast messages/Fetch latest message.
+
+
+# Dev Notes 
+Run command `flutter_rust_bridge_codegen generate --watch`
