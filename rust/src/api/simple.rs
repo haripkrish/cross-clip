@@ -22,13 +22,13 @@ pub struct NoteStorage {
 }
 
 impl NoteStorage {
-    fn new() -> Self {
+    pub fn new() -> Self {
         NoteStorage {
             data: HashMap::new()
         }
     }
 
-    fn set_note(&mut self, user_device_id: &str, note_header: &str, note_value: &str) {
+    pub(crate) fn set_note(&mut self, user_device_id: &str, note_header: &str, note_value: &str) {
         let note_entry = HashMap::from([(note_header.to_string(), note_value.to_string())]);
 
         let entry = self.data.entry(user_device_id.to_string()).or_insert_with(Vec::new);
@@ -139,20 +139,23 @@ static NOTES_EVENT_STREAM: RwLock<Option<StreamSink<NoteStorage>>> = RwLock::new
 
 //pub fn note_event_stream(sink: SteamSink
 
+use crate::api::swam_main;
 pub fn notes_event_stream(s: StreamSink<NoteStorage>) -> Result<()> {
 
     println!("Note event called");
+
     let mut note_storage = NoteStorage::new();
     let mut ticks = 0;
-    loop {
-        s.add(note_storage.clone());
-        sleep(ONE_SECOND);
-        if 100 == i32::MAX {
-            break;
-        }
-        println!("Set note by user device ID");
-        note_storage.set_note("Hari_device1", "Note_header1", &format!("{}{}", "", ticks));
-        ticks += 1;
-    }
+    swam_main::run_swarm();
+    // loop {
+    //     s.add(note_storage.clone());
+    //     sleep(ONE_SECOND);
+    //     if 100 == i32::MAX {
+    //         break;
+    //     }
+    //     println!("Set note by user device ID");
+    //     note_storage.set_note("Hari_device1", "Note_header1", &format!("{}{}", "", ticks));
+    //     ticks += 1;
+    // }
     Ok(())
 }

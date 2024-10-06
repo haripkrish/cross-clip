@@ -1,8 +1,10 @@
-use std::collections::HashMap;
-
+// use rust_lib_cross_clip::api::simple::NoteStorage;
+// use rust_lib_cross_clip::api::swam_main;
 
 fn main() {
-    let mut device_messages: HashMap<String, Vec<String>> = HashMap::new();
-    println!("Rust App: {:?}", device_messages);
+    println!("Application starting");
 
+    // let mut note_storage = NoteStorage::new();
+    // let mut ticks = 0;
+    // run_swarm(&mut note_storage);
 }
