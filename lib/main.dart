@@ -11,7 +11,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
   final String title;
 
   @override
@@ -58,10 +58,11 @@ class _MyHomePageState extends State<MyHomePage> {
               builder: (context, snap) {
                 final style = Theme.of(context).textTheme.headlineMedium;
                 final error = snap.error;
-                if (error != null)
+                if (error != null) {
                   return Tooltip(
                       message: error.toString(),
                       child: Text('Error', style: style));
+                }
 
                 final data = snap.data;
                 if (data != null) return Text('$data second(s)', style: style);
@@ -73,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SecondPage()),
+                  MaterialPageRoute(builder: (context) => const SecondPage()),
                 );
               },
               child: Text('Go to Second Page\n Result1: `${test4()}`'),

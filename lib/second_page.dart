@@ -3,6 +3,8 @@ import 'package:cross_clip/src/rust/api/simple.dart';
 import 'main.dart';
 
 class SecondPage extends StatelessWidget {
+  const SecondPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,7 +18,7 @@ class SecondPage extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
   final String title;
 
   @override
@@ -53,10 +55,11 @@ class _MyHomePageState extends State<MyHomePage> {
               builder: (context, snap) {
                 final style = Theme.of(context).textTheme.headlineMedium;
                 final error = snap.error;
-                if (error != null)
+                if (error != null) {
                   return Tooltip(
                       message: error.toString(),
                       child: Text('Error', style: style));
+                }
 
                 final data = snap.data;
                 if (data != null) return Text('${data.data} second(s)', style: style);
@@ -70,10 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyApp()),
+                  MaterialPageRoute(builder: (context) => const MyApp()),
                 );
               },
-              child: Text('Go to first Page'),
+              child: const Text('Go to first Page'),
             ),
           ],
         ),
