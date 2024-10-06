@@ -159,3 +159,26 @@ pub fn notes_event_stream(s: StreamSink<NoteStorage>) -> Result<()> {
     // }
     Ok(())
 }
+
+#[derive(Debug, Clone, serde::Serialize)]  // Add necessary traits like Serialize
+pub struct ValidationResponse {
+    pub success: bool,  // Make fields public
+    pub message: String, // Make fields public
+}
+
+#[flutter_rust_bridge::frb]
+pub fn validate_public_key(public_key: String) -> ValidationResponse {
+    // TODO Call the swarm logic on failure send message to UI 
+    if public_key.len() > 10 { // Example condition for validation
+        ValidationResponse {
+            success: true,
+            message: "Public key is valid.".to_string(),
+        }
+    } else {
+        println!("Invalid public key");
+        ValidationResponse {
+            success: false,
+            message: "Invalid public key length.".to_string(),
+        }
+    }
+}

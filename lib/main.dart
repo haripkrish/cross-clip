@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'theme.dart';
+import 'package:cross_clip/src/rust/api/simple.dart';
+import 'package:cross_clip/src/rust/frb_generated.dart';
 
-void main() {
-  runApp(NotesApp());
+
+Future<void> main() async {
+  await RustLib.init();
+  runApp(const NotesApp());
 }
 
 class NotesApp extends StatelessWidget {
+  const NotesApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,18 +21,20 @@ class NotesApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true, // Enable Material 3 design
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           bodyMedium: TextStyle(fontSize: 18, color: Colors.deepPurple),  // Updated from bodyText2
         ),
       ),
       //themeMode: ThemeMode.system, // Can be ThemeMode.light or ThemeMode.dark
-      home: PublicKeyInputPage(),
+      home: const PublicKeyInputPage(),
     );
   }
 }
 
 // Public Key Input Screen
 class PublicKeyInputPage extends StatefulWidget {
+  const PublicKeyInputPage({super.key});
+
   @override
   _PublicKeyInputPageState createState() => _PublicKeyInputPageState();
 }
@@ -35,7 +43,7 @@ class _PublicKeyInputPageState extends State<PublicKeyInputPage> {
   final TextEditingController _publicKeyController = TextEditingController();
   String _errorMessage = '';
 
-  void _submitPublicKey() {
+  Future<void> _submitPublicKey() async {
     String publicKey = _publicKeyController.text.trim();
 
     // Basic validation
@@ -43,14 +51,23 @@ class _PublicKeyInputPageState extends State<PublicKeyInputPage> {
       setState(() {
         _errorMessage = 'Please enter a public key';
       });
-    } else {
-      // Navigate to the notes page
+      return;
+    }
+
+    final response = await validatePublicKey(publicKey: publicKey);
+
+    if (response.success) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => NotesHomePage(publicKey: publicKey),
         ),
       );
+    } else {
+      // Display error message if validation fails
+      setState(() {
+        _errorMessage = response.message; // Show the message returned from Rust
+      });
     }
   }
 
@@ -58,7 +75,7 @@ class _PublicKeyInputPageState extends State<PublicKeyInputPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Enter Public Key'),
+        title: const Text('Enter Public Key'),
         centerTitle: true,
         elevation: 4.0,
       ),
@@ -69,7 +86,7 @@ class _PublicKeyInputPageState extends State<PublicKeyInputPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             // Title text
-            Text(
+            const Text(
               'Welcome to Cross Clip',
               style: TextStyle(
                 fontSize: 24,
@@ -78,13 +95,13 @@ class _PublicKeyInputPageState extends State<PublicKeyInputPage> {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               'Please enter your public key to continue:',
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Public Key Text Field with a card-like UI
             Card(
@@ -96,35 +113,35 @@ class _PublicKeyInputPageState extends State<PublicKeyInputPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: _publicKeyController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Enter your public key',
                     border: OutlineInputBorder(),
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Error message
             if (_errorMessage.isNotEmpty)
               Text(
                 _errorMessage,
-                style: TextStyle(color: Colors.red),
+                style: const TextStyle(color: Colors.red),
                 textAlign: TextAlign.center,
               ),
 
             // Submit button
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _submitPublicKey,
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
                 backgroundColor: Colors.deepPurple
               ),
-              child: Text(
+              child: const Text(
                 'Submit',
                 style: TextStyle(fontSize: 18, color: Colors.white),
               ),

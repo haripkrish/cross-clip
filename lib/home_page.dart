@@ -5,7 +5,7 @@ import 'theme.dart';
 class NotesHomePage extends StatelessWidget {
   final String publicKey;
 
-  NotesHomePage({required this.publicKey});
+  const NotesHomePage({super.key, required this.publicKey});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class _MyHomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notes page'),
+        title: const Text('Notes page'),
       ),
       body: Center(
         child: Column(
@@ -53,10 +53,10 @@ class _MyHomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NotesApp()),
+                  MaterialPageRoute(builder: (context) => const NotesApp()),
                 );
               },
-              child: const Text('Go to first Page'),
+              child: const Text('Exit'),
             ),
           ],
         ),
