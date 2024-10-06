@@ -1,6 +1,7 @@
 # cross_clip
 
 
+
 user journey :
 1. Application Start:
     a. Create new session
