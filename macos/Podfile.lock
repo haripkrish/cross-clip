@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  rust_lib_cross_clip: c1cb3bbffbbb9764cd9a7171f79485b0aef2fad4
+  rust_lib_cross_clip: 7d4c147c6898e641dcc82e763f865bb3d8629619
 
 PODFILE CHECKSUM: 236401fc2c932af29a9fcf0e97baeeb2d750d367
 
