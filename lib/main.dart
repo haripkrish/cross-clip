@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(builder: (context) => const SecondPage()),
                 );
               },
-              child: Text('Go to Second Page\n Result1: `${test4()}`'),
+              child: const Text('Go to Second Page\n Result1: '),
             ),
           ],
         ),

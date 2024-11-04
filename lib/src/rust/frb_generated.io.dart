@@ -3,7 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
-import 'api/simple.dart';
+import 'api/main.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi' as ffi;
@@ -29,14 +29,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dco_decode_Map_String_list_Map_String_String(dynamic raw);
 
   @protected
+  RustStreamSink<CustomResponseEvent>
+      dco_decode_StreamSink_custom_response_event_Sse(dynamic raw);
+
+  @protected
   RustStreamSink<int> dco_decode_StreamSink_i_32_Sse(dynamic raw);
 
   @protected
-  RustStreamSink<NoteStorage> dco_decode_StreamSink_note_storage_Sse(
-      dynamic raw);
+  String dco_decode_String(dynamic raw);
 
   @protected
-  String dco_decode_String(dynamic raw);
+  CustomResponseEvent dco_decode_custom_response_event(dynamic raw);
 
   @protected
   int dco_decode_i_32(dynamic raw);
@@ -53,9 +56,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<(String, String)> dco_decode_list_record_string_string(dynamic raw);
-
-  @protected
-  NoteStorage dco_decode_note_storage(dynamic raw);
 
   @protected
   (String, List<Map<String, String>>)
@@ -83,15 +83,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  RustStreamSink<CustomResponseEvent>
+      sse_decode_StreamSink_custom_response_event_Sse(
+          SseDeserializer deserializer);
+
+  @protected
   RustStreamSink<int> sse_decode_StreamSink_i_32_Sse(
       SseDeserializer deserializer);
 
   @protected
-  RustStreamSink<NoteStorage> sse_decode_StreamSink_note_storage_Sse(
-      SseDeserializer deserializer);
+  String sse_decode_String(SseDeserializer deserializer);
 
   @protected
-  String sse_decode_String(SseDeserializer deserializer);
+  CustomResponseEvent sse_decode_custom_response_event(
+      SseDeserializer deserializer);
 
   @protected
   int sse_decode_i_32(SseDeserializer deserializer);
@@ -111,9 +116,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   List<(String, String)> sse_decode_list_record_string_string(
       SseDeserializer deserializer);
-
-  @protected
-  NoteStorage sse_decode_note_storage(SseDeserializer deserializer);
 
   @protected
   (String, List<Map<String, String>>)
@@ -146,15 +148,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       Map<String, List<Map<String, String>>> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_StreamSink_custom_response_event_Sse(
+      RustStreamSink<CustomResponseEvent> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_StreamSink_i_32_Sse(
       RustStreamSink<int> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_StreamSink_note_storage_Sse(
-      RustStreamSink<NoteStorage> self, SseSerializer serializer);
+  void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
-  void sse_encode_String(String self, SseSerializer serializer);
+  void sse_encode_custom_response_event(
+      CustomResponseEvent self, SseSerializer serializer);
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
@@ -174,9 +180,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_record_string_string(
       List<(String, String)> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_note_storage(NoteStorage self, SseSerializer serializer);
 
   @protected
   void sse_encode_record_string_list_map_string_string(

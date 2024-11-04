@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:cross_clip/src/rust/api/main.dart';
 import 'package:cross_clip/src/rust/api/simple.dart';
+import 'package:flutter/material.dart';
 import 'main.dart';
 
 class SecondPage extends StatelessWidget {
@@ -19,6 +20,7 @@ class SecondPage extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -26,12 +28,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Stream<NoteStorage> note_event_stream;
+  late Stream<CustomResponseEvent> gossip_sub_event_response_stream;
 
   @override
   void initState() {
     super.initState();
-    note_event_stream = notesEventStream();
+    gossip_sub_event_response_stream = swarmEventStream();
   }
 
   @override
@@ -45,8 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text("Time since starting Rust stream"),
-            StreamBuilder<NoteStorage>(
-              stream: note_event_stream,
+            StreamBuilder<CustomResponseEvent>(
+              stream: gossip_sub_event_response_stream,
               // builder: (context, data) {
               //   final style = Theme.of(context).textTheme.headlineMedium;
               //   if (data.hasData) {
@@ -62,9 +64,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
 
                 final data = snap.data;
-                if (data != null) return Text('${data.data} second(s)', style: style);
-                if (data == null) return Text('$note_event_stream', style: style);
-
+                if (data != null) {
+                  return Text('${data.data} second(s)', style: style);
+                }
+                if (data == null) {
+                  return Text('$gossip_sub_event_response_stream',
+                      style: style);
+                }
 
                 return const CircularProgressIndicator();
               },
