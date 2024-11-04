@@ -137,9 +137,6 @@ pub fn tick(sink: StreamSink<i32>) -> Result<()> {
 
 fn generate_new_key_pair() -> Keypair {
     let local_keypair: Keypair = Keypair::generate_ed25519();
-    let local_peer_id: PeerId = PeerId::from(local_keypair.public());
-    println!("new key pair: {:?}", local_peer_id);
-
     local_keypair
 }
 fn generate_new_mnemonic() -> Mnemonic {
@@ -161,7 +158,6 @@ fn get_keypair_from_mnemonic(mnemonic: Mnemonic) -> Keypair {
 }
 fn get_peer_id(keypair: &Keypair) -> PeerId {
     let local_peer_id: PeerId = PeerId::from(keypair.public());
-    println!("Local peer id: {:?}", local_peer_id);
     local_peer_id
 }
 
@@ -195,13 +191,18 @@ pub async fn run_app(s: StreamSink<CustomResponseEvent>) {
 
     // let mnemonic = generate_new_mnemonic();
     let mnemonic = get_mnemonic_from_str(&"color cigar trouble domain floor math card festival hammer safe govern cute strong common patient");
-
     let keypair = get_keypair_from_mnemonic_str(&*mnemonic.to_string());
     let peer_id = get_peer_id(&keypair);
+
+    let topic = gossipsub::IdentTopic::new(peer_id.to_string());
+    println!("Topic Name {}", topic.to_string());
+
     let new_keypair = generate_new_key_pair();
+    println!("Local Keypair {}", get_peer_id(&new_keypair).to_string());
 
-
-    let mdns = mdns::tokio::Behaviour::new(mdns::Config::default(), new_keypair.public().to_peer_id()).unwrap_or_else(|err| panic!("Failed to build MDNS config: {:?}", err));
+    let mdns = mdns::tokio::Behaviour::new(
+        mdns::Config::default(), new_keypair.public().to_peer_id(),
+    ).unwrap_or_else(|err| panic!("Failed to build MDNS config: {:?}", err));
 
     let gossipsub: Behaviour = Behaviour::new(
         gossipsub::MessageAuthenticity::Signed(new_keypair.clone()),
@@ -216,14 +217,20 @@ pub async fn run_app(s: StreamSink<CustomResponseEvent>) {
         }).unwrap_or_else(|err| panic!("Failed At the behaviour : {:?}", err))
         .with_swarm_config(|c| c.with_idle_connection_timeout(Duration::from_secs(60)))
         .build();
-    swarm.listen_on("/ip4/0.0.0.0/udp/0/quic-v1".parse().unwrap_or_else(|err| panic!("Failed to build QUIC config: {:?}", err))).unwrap_or_else(|err| panic!("Failed to build SWAM RUN  config: {:?}", err));
-    println!("{}", peer_id);
+    swarm.listen_on("/ip4/0.0.0.0/udp/0/quic-v1".parse().unwrap_or_else(|err| panic!("Failed to build QUIC config: {:?}", err))).unwrap_or_else(|err| panic!("Failed to build SWARM RUN  config: {:?}", err));
 
-    let topic = gossipsub::IdentTopic::new(peer_id.to_string());
     let x = swarm.behaviour_mut().gossipsub.subscribe(&topic).unwrap_or_else(|err| panic!("Failed to subscribe: {:?}", err));
+
     loop {
         select! {
             event = swarm.select_next_some() => match event {
+                    SwarmEvent::NewListenAddr { address, .. } => {
+                        println!("Local node is listening on {address}");
+                        let line = "THIS IS A TEST MESSAGE";
+                        let message = InputMessage::new(line.to_string());
+                        // println!("{:?}", message);
+                        // publish_message(peer_id.to_string(), &message, &mut swarm.behaviour_mut().gossipsub);
+                    },
                     SwarmEvent::Behaviour(MyBehaviourEvent::Mdns(mdns::Event::Discovered(list))) => {
                         for (peer_id, _multiaddr) in list {
                             println!("mDNS discovered a new peer: {peer_id}");
@@ -235,13 +242,6 @@ pub async fn run_app(s: StreamSink<CustomResponseEvent>) {
                             println!("mDNS discover peer has expired: {peer_id}");
                             swarm.behaviour_mut().gossipsub.remove_explicit_peer(&peer_id);
                         }
-                    },
-                    SwarmEvent::NewListenAddr { address, .. } => {
-                        println!("Local node is listening on {address}");
-                        let line = "THIS IS A TEST MESSAGE";
-                        let message = InputMessage::new(line.to_string());
-                        println!("{:?}", message);
-                        publish_message(peer_id.to_string(), &message, &mut swarm.behaviour_mut().gossipsub);
                     },
                     SwarmEvent::Behaviour(MyBehaviourEvent::Gossipsub(gossipsub::Event::Message {
                         propagation_source: peer_id,
@@ -289,7 +289,6 @@ pub struct MyBehaviour {
 }
 
 
-
 fn get_gossipsub_config() -> Result<Config, Box<dyn Error>> {
     let gossipsub_config = gossipsub::ConfigBuilder::default()
         .heartbeat_interval(Duration::from_secs(10)) // This is set to aid debugging by not cluttering the log space
@@ -306,5 +305,4 @@ fn publish_message(topic_name: String, message: &InputMessage, gossip_behaviour:
     let message_id = gossip_behaviour.publish(topic.clone(), message_str.as_bytes()).unwrap_or_else(|err| panic!("Failed to send message {:?}", err));
     println!("message sent {}", message_id);
     true
-
 }
