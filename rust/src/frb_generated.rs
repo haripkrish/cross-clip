@@ -164,7 +164,7 @@ fn wire__crate__api__main__run_app_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_s = <StreamSink<
+            let api__s = <StreamSink<
                 crate::api::main::CustomResponseEvent,
                 flutter_rust_bridge::for_generated::SseCodec,
             >>::sse_decode(&mut deserializer);
@@ -172,7 +172,7 @@ fn wire__crate__api__main__run_app_impl(
             move |context| {
                 transform_result_sse::<_, ()>((move || {
                     let output_ok = Result::<_, ()>::Ok({
-                        crate::api::main::run_app(api_s);
+                        crate::api::main::run_app(api__s);
                     })?;
                     Ok(output_ok)
                 })())

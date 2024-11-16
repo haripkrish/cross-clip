@@ -6,9 +6,8 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `generate_new_key_pair`, `generate_new_mnemonic`, `get_gossipsub_config`, `get_keypair_from_mnemonic_str`, `get_keypair_from_mnemonic`, `get_mnemonic_from_str`, `get_note`, `get_peer_id`, `main1`, `publish_message`, `set_note`
-// These types are ignored because they are not used by any `pub` functions: `MyBehaviourEvent`, `MyBehaviour`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `fmt`, `handle_established_inbound_connection`, `handle_established_outbound_connection`, `handle_pending_inbound_connection`, `handle_pending_outbound_connection`, `on_connection_handler_event`, `on_swarm_event`, `poll`
+// These functions are ignored because they are not marked as `pub`: `event_handler`, `get_note`, `main1`, `set_note`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
 
 String greet({required String name}) =>
     RustLib.instance.api.crateApiMainGreet(name: name);
