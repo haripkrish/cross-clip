@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:cross_clip/src/rust/api/simple.dart';
 import 'package:cross_clip/src/rust/frb_generated.dart';
-import 'second_page.dart';
-//
-// import 'package:flutter/material.dart';
+import 'package:cross_clip/src/rust/schema/swarm_model.dart';
+import 'package:flutter/material.dart';
+import 'src/rust/api/main.dart';
 
 Future<void> main() async {
   await RustLib.init();
@@ -27,6 +25,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -34,12 +33,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Stream<int> ticks;
+  late Stream<CustomResponseEvent> gossip_sub_event_response_stream;
 
   @override
   void initState() {
     super.initState();
-    ticks = tick();
+    gossip_sub_event_response_stream = startApp();
   }
 
   @override
@@ -53,8 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text("Time since starting Rust stream"),
-            StreamBuilder<int>(
-              stream: ticks,
+            StreamBuilder<CustomResponseEvent>(
+              stream: gossip_sub_event_response_stream,
               builder: (context, snap) {
                 final style = Theme.of(context).textTheme.headlineMedium;
                 final error = snap.error;
@@ -70,15 +69,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 return const CircularProgressIndicator();
               },
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SecondPage()),
-                );
-              },
-              child: const Text('Go to Second Page\n Result1: '),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => const SecondPage()),
+            //     );
+            //   },
+            //   child: const Text('Go to Second Page\n Result1: '),
+            // ),
           ],
         ),
       ),

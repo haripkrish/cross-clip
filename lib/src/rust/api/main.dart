@@ -4,41 +4,10 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../frb_generated.dart';
+import '../schema/swarm_model.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `event_handler`, `get_note`, `main1`, `set_note`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
+// These functions are ignored because they are not marked as `pub`: `event_handler`
 
-String greet({required String name}) =>
-    RustLib.instance.api.crateApiMainGreet(name: name);
-
-String test1() => RustLib.instance.api.crateApiMainTest1();
-
-String test4() => RustLib.instance.api.crateApiMainTest4();
-
-Stream<int> tick() => RustLib.instance.api.crateApiMainTick();
-
-Stream<CustomResponseEvent> runApp() =>
-    RustLib.instance.api.crateApiMainRunApp();
-
-class CustomResponseEvent {
-  final Map<String, List<Map<String, String>>> data;
-
-  const CustomResponseEvent({
-    required this.data,
-  });
-
-  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<CustomResponseEvent> newInstance() =>
-      RustLib.instance.api.crateApiMainCustomResponseEventNew();
-
-  @override
-  int get hashCode => data.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CustomResponseEvent &&
-          runtimeType == other.runtimeType &&
-          data == other.data;
-}
+Stream<CustomResponseEvent> startApp() =>
+    RustLib.instance.api.crateApiMainStartApp();

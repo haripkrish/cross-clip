@@ -1,4 +1,4 @@
-pub mod api;
 mod frb_generated;
-pub mod service;
+pub mod api;
 pub mod schema;
+pub mod service;

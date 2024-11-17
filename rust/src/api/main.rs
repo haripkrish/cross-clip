@@ -17,128 +17,22 @@ use tokio::{io, select};
 
 use crate::frb_generated::StreamSink;
 use crate::schema::message::InputMessage;
-use crate::service::swarm_util::{get_gossipsub_config, initialize_swarm};
-use crate::schema::swarm_model::{MyBehaviourEvent, MyBehaviour};
+use crate::service::swarm_util::{get_gossipsub_config, initialize_swarm, subscribe_to_topic};
+use crate::schema::swarm_model::{MyBehaviourEvent, MyBehaviour, CustomResponseEvent};
 
-#[flutter_rust_bridge::frb(sync)] // Synchronous mode for simplicity of the demo
-pub fn greet(name: String) -> String {
-    format!("Hello yo1aa, {name}!")
-}
-
-#[flutter_rust_bridge::frb(sync)]
-pub fn test_1() -> String {
-    format!("test")
-}
-
-#[flutter_rust_bridge::frb(init)]
+#[frb(init)]
 pub fn init_app() {
     // Default utilities - feel free to customize
     flutter_rust_bridge::setup_default_user_utils();
 }
 
-#[derive(Debug, Clone)]
-pub struct CustomResponseEvent {
-    pub data: HashMap<String, Vec<HashMap<String, String>>>,
-}
-
-impl CustomResponseEvent {
-    pub fn new() -> Self {
-        CustomResponseEvent {
-            data: HashMap::new()
-        }
-    }
-
-    pub(crate) fn set_note(&mut self, user_device_id: &str, note_header: &str, note_value: &str) {
-        let note_entry = HashMap::from([(note_header.to_string(), note_value.to_string())]);
-
-        let entry = self.data.entry(user_device_id.to_string()).or_insert_with(Vec::new);
-        entry.push(note_entry);
-    }
-
-    fn get_note(&self, user_device_id: &str) -> Option<&Vec<HashMap<String, String>>> {
-        self.data.get(user_device_id)
-    }
-}
-
-fn main1() -> String {
-    println!("Test note storage");
-
-    let mut note_storage = CustomResponseEvent::new();
-
-    println!("Get note by user device ID");
-    if let Some(notes) = note_storage.get_note("asd") {
-        for note in notes {
-            for (k, v) in note {
-                println!("Note header: {}, Notes: {}", k, v)
-            }
-        }
-    }
-
-    println!("Set note by user device ID");
-    note_storage.set_note("Hari_device1", "Note_header1", "Note_value1");
-    note_storage.set_note("Hari_device1", "Note_header2", "Note_value2");
-    note_storage.set_note("Hari_device2", "Note_header1", "Note_value1");
-    note_storage.set_note("Karthik_device1", "Note_header1", "Note_value1");
-
-    println!("Get note by user device ID");
-    let user_device_id_test = "Hari_device2";
-
-    if let Some(notes) = note_storage.get_note(user_device_id_test) {
-        println!("Note for {}", user_device_id_test);
-        for note in notes {
-            for (k, v) in note {
-                println!("Note header: {}, Notes: {}", k, v)
-            }
-        }
-        println!("\n");
-    }
-
-    println!("Note storage: {:?}", note_storage);
-    format!("test")
-}
-
-#[flutter_rust_bridge::frb(sync)]
-pub fn test_4() -> String {
-    println!("Test note storage");
-
-    let mut note_storage = CustomResponseEvent::new();
-    println!("Set note by user device ID");
-    note_storage.set_note("Hari_device1", "Note_header1", "Note_value1");
-    println!("Get note by user device ID");
-    let user_device_id_test = "Hari_device1";
-
-    if let Some(notes) = note_storage.get_note(user_device_id_test) {
-        println!("Note for {}", user_device_id_test);
-        for note in notes {
-            for (k, v) in note {
-                println!("Note header: {}, Notes: {}", k, v)
-            }
-        }
-        println!("\n");
-    }
-    format!("test2")
-}
-
 const ONE_SECOND: Duration = Duration::from_secs(2);
 static SWARM_EVENT_STREAM: RwLock<Option<StreamSink<CustomResponseEvent>>> = RwLock::new(None);
-pub fn tick(sink: StreamSink<i32>) -> Result<()> {
-    println!("tick called");
-    let mut ticks = 0;
-    loop {
-        sink.add(ticks);
-        sleep(ONE_SECOND);
-        if ticks == i32::MAX {
-            break;
-        }
-        ticks += 1;
-    }
-    Ok(())
-}
 
 fn event_handler() {}
 #[tokio::main]
-pub async fn run_app(_s: StreamSink<CustomResponseEvent>) {
-    println!("Starting Application RUN_APP");
+pub async fn start_app(_s: StreamSink<CustomResponseEvent>) -> Result<()> {
+    println!("Starting Application start_app");
 
     let (mut swarm, topic_id) = initialize_swarm(&"color cigar trouble domain floor math card festival hammer safe govern cute strong common patient");
 
@@ -146,11 +40,8 @@ pub async fn run_app(_s: StreamSink<CustomResponseEvent>) {
         select! {
             event = swarm.select_next_some() => match event {
                 SwarmEvent::NewListenAddr { address, .. } => {
-                    println!("Local node is listening on {address}");
-                    let line = "THIS IS A TEST MESSAGE";
-                    let _message = InputMessage::new(line.to_string());
-                    // println!("{:?}", message);
-                    // publish_message(peer_id.to_string(), &message, &mut swarm.behaviour_mut().gossipsub);
+                    println!("Local node is listening onNN {address}");
+                    subscribe_to_topic(&topic_id, &mut swarm);
                 },
                 SwarmEvent::Behaviour(MyBehaviourEvent::Mdns(mdns::Event::Discovered(list))) => {
                     for (peer_id, _multiaddr) in list {

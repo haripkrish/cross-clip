@@ -57,7 +57,7 @@ pub fn initialize_swarm(mnemonic_string: &str) -> (Swarm<MyBehaviour>, String) {
     (swarm, topic_id)
 }
 
-fn subscribe_to_topic(topic_id: &String, swarm: &mut Swarm<MyBehaviour>) {
+pub fn subscribe_to_topic(topic_id: &String, swarm: &mut Swarm<MyBehaviour>) {
     let topic = gossipsub::IdentTopic::new(topic_id);
     println!("Topic Name {}", topic.to_string());
     swarm
@@ -68,6 +68,7 @@ fn subscribe_to_topic(topic_id: &String, swarm: &mut Swarm<MyBehaviour>) {
                 panic!("Failed to subscribe: {:?}", err)
             }
         );
+    println!("Connected peers: {}", swarm.connected_peers().count());
 }
 
 pub fn get_gossipsub_config() -> Result<Config, Box<dyn Error>> {

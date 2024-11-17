@@ -2,7 +2,7 @@ use bip39::{Language, Mnemonic, MnemonicType};
 use libp2p::PeerId;
 use libp2p::identity::Keypair;
 
-pub(crate) fn generate_new_key_pair() -> Keypair {
+pub fn generate_new_key_pair() -> Keypair {
     let local_keypair: Keypair = Keypair::generate_ed25519();
     local_keypair
 }
@@ -14,7 +14,7 @@ fn generate_new_mnemonic() -> Mnemonic {
 pub fn get_mnemonic_from_str(mnemonic_string: &str) -> Mnemonic {
     Mnemonic::from_phrase(mnemonic_string, Language::English).unwrap()
 }
-pub(crate) fn get_keypair_from_mnemonic_str(mnemonic_string: &str) -> Keypair {
+pub fn get_keypair_from_mnemonic_str(mnemonic_string: &str) -> Keypair {
     let mnemonic = Mnemonic::from_phrase(mnemonic_string, Default::default()).unwrap();
     get_keypair_from_mnemonic(mnemonic)
 }
@@ -23,7 +23,7 @@ fn get_keypair_from_mnemonic(mnemonic: Mnemonic) -> Keypair {
     entropy_bytes[..mnemonic.entropy().len()].copy_from_slice(&mnemonic.entropy());
     Keypair::ed25519_from_bytes(entropy_bytes).unwrap()
 }
-pub(crate) fn get_peer_id(keypair: &Keypair) -> PeerId {
+pub fn get_peer_id(keypair: &Keypair) -> PeerId {
     let local_peer_id: PeerId = PeerId::from(keypair.public());
     local_peer_id
 }
