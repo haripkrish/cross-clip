@@ -53,7 +53,7 @@ pub fn initialize_swarm(mnemonic_string: &str) -> (Swarm<MyBehaviour>, String) {
     swarm.listen_on("/ip4/0.0.0.0/udp/0/quic-v1".parse().unwrap_or_else(|err| panic!("Failed to build QUIC config: {:?}", err))).unwrap_or_else(|err| panic!("Failed to build SWARM RUN  config: {:?}", err));
 
     subscribe_to_topic(&topic_id, &mut swarm);
-    println!("Connected peers: {}", swarm.connected_peers().count());
+
     (swarm, topic_id)
 }
 
@@ -68,7 +68,8 @@ pub fn subscribe_to_topic(topic_id: &String, swarm: &mut Swarm<MyBehaviour>) {
                 panic!("Failed to subscribe: {:?}", err)
             }
         );
-    println!("Connected peers: {}", swarm.connected_peers().count());
+    // println!("Connected peers: {}", swarm
+    //     .behaviour_mut().gossipsub.all_mesh_peers().count());
 }
 
 pub fn get_gossipsub_config() -> Result<Config, Box<dyn Error>> {

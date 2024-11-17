@@ -14,7 +14,7 @@ use libp2p::identity::Keypair;
 use libp2p::swarm::{NetworkBehaviour, SwarmEvent};
 // use log::{debug, error, info};
 use tokio::{io, select};
-
+use crate::utils::common::{DEFAULT_MNEMONIC};
 use crate::frb_generated::StreamSink;
 use crate::schema::message::InputMessage;
 use crate::service::swarm_util::{get_gossipsub_config, initialize_swarm, subscribe_to_topic};
@@ -34,14 +34,13 @@ fn event_handler() {}
 pub async fn start_app(_s: StreamSink<CustomResponseEvent>) -> Result<()> {
     println!("Starting Application start_app");
 
-    let (mut swarm, topic_id) = initialize_swarm(&"color cigar trouble domain floor math card festival hammer safe govern cute strong common patient");
+    let (mut swarm, topic_id) = initialize_swarm(&DEFAULT_MNEMONIC);
 
     loop {
         select! {
             event = swarm.select_next_some() => match event {
                 SwarmEvent::NewListenAddr { address, .. } => {
                     println!("Local node is listening onNN {address}");
-                    subscribe_to_topic(&topic_id, &mut swarm);
                 },
                 SwarmEvent::Behaviour(MyBehaviourEvent::Mdns(mdns::Event::Discovered(list))) => {
                     for (peer_id, _multiaddr) in list {

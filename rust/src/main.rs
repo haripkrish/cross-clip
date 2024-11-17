@@ -7,18 +7,21 @@ use serde::{Deserialize, Serialize};
 use tokio::{io, select};
 use tokio::io::AsyncBufReadExt;
 
+
 pub mod schema;
 pub mod service;
+pub mod utils;
 use crate::schema::message::InputMessage;
 use crate::service::swarm_util::{publish_message, initialize_swarm, subscribe_to_topic};
 use crate::schema::swarm_model::{MyBehaviourEvent, MyBehaviour};
+use crate::utils::common::DEFAULT_MNEMONIC;
 
 
 #[tokio::main]
 #[frb(ignore)]
 pub async fn main() {
     println!("Application starting");
-    let (mut swarm, topic) = initialize_swarm(&"color cigar trouble domain floor math card festival hammer safe govern cute strong common patient");
+    let (mut swarm, topic) = initialize_swarm(&DEFAULT_MNEMONIC);
     println!("Enter messages via STDIN and they will be sent to connected peers using Gossipsub");
     let mut stdin = io::BufReader::new(io::stdin()).lines();
     loop {
@@ -32,8 +35,6 @@ pub async fn main() {
              event = swarm.select_next_some() => match event {
                      SwarmEvent::NewListenAddr { address, .. } => {
                          println!("Local node is listening onNN {address}");
-                         subscribe_to_topic(&topic, &mut swarm);
-                         println!("THIS IS A TEST MESSAGE");
                      },
                      SwarmEvent::Behaviour(MyBehaviourEvent::Mdns(mdns::Event::Discovered(list))) => {
                          for (peer_id, _multiaddr) in list {
