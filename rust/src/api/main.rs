@@ -17,7 +17,7 @@ use tokio::{io, select};
 use crate::utils::common::{DEFAULT_MNEMONIC, handle_swarm_event};
 use crate::frb_generated::StreamSink;
 use crate::schema::message::InputMessage;
-use crate::service::swarm_util::{get_gossipsub_config, initialize_swarm, subscribe_to_topic};
+use crate::service::swarm_util::{initialize_swarm};
 use crate::schema::swarm_model::{MyBehaviourEvent, MyBehaviour, CustomResponseEvent};
 
 #[frb(init)]

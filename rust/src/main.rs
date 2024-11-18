@@ -12,7 +12,7 @@ pub mod schema;
 pub mod service;
 pub mod utils;
 use crate::schema::message::InputMessage;
-use crate::service::swarm_util::{publish_message, initialize_swarm, subscribe_to_topic};
+use crate::service::swarm_util::{publish_message, initialize_swarm};
 use crate::schema::swarm_model::{MyBehaviourEvent, MyBehaviour};
 use crate::utils::common::handle_swarm_event;
 use crate::utils::common::DEFAULT_MNEMONIC;

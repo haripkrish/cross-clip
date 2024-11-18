@@ -55,7 +55,7 @@ pub fn initialize_swarm(mnemonic_string: &str) -> (Swarm<MyBehaviour>, String) {
     (swarm, topic_id)
 }
 
-pub fn subscribe_to_topic(topic_id: &String, swarm: &mut Swarm<MyBehaviour>) {
+fn subscribe_to_topic(topic_id: &String, swarm: &mut Swarm<MyBehaviour>) {
     let topic = gossipsub::IdentTopic::new(topic_id);
     println!("Topic Name {}", topic.to_string());
     swarm
@@ -69,7 +69,7 @@ pub fn subscribe_to_topic(topic_id: &String, swarm: &mut Swarm<MyBehaviour>) {
     println!("Subscribed topics: {:?}", swarm.behaviour_mut().gossipsub.topics().count());
 }
 
-pub fn get_gossipsub_config() -> Config {
+fn get_gossipsub_config() -> Config {
     gossipsub::ConfigBuilder::default()
         .heartbeat_interval(Duration::from_secs(10)) // This is set to aid debugging by not cluttering the log space
         .validation_mode(gossipsub::ValidationMode::Strict) // This sets the kind of message validation. The default is Strict (enforce message signing)

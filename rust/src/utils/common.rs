@@ -5,7 +5,7 @@ use crate::schema::swarm_model::{MyBehaviourEvent, MyBehaviour};
 
 pub static DEFAULT_MNEMONIC: &str = "color cigar trouble domain floor math card festival hammer safe govern cute strong common patient";
 
-pub fn handle_swarm_event(event: SwarmEvent<MyBehaviourEvent>,  swarm: &mut Swarm<MyBehaviour>) {
+pub fn handle_swarm_event(event: SwarmEvent<MyBehaviourEvent>, swarm: &mut Swarm<MyBehaviour>) {
     match event {
         SwarmEvent::NewListenAddr { address, .. } => {
             println!("Local node is listening onNN {address}");
