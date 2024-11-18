@@ -14,7 +14,7 @@ use libp2p::identity::Keypair;
 use libp2p::swarm::{NetworkBehaviour, SwarmEvent};
 // use log::{debug, error, info};
 use tokio::{io, select};
-use crate::utils::common::{DEFAULT_MNEMONIC};
+use crate::utils::common::{DEFAULT_MNEMONIC, handle_swarm_event};
 use crate::frb_generated::StreamSink;
 use crate::schema::message::InputMessage;
 use crate::service::swarm_util::{get_gossipsub_config, initialize_swarm, subscribe_to_topic};
@@ -38,38 +38,11 @@ pub async fn start_app(_s: StreamSink<CustomResponseEvent>) -> Result<()> {
 
     loop {
         select! {
-            event = swarm.select_next_some() => match event {
-                SwarmEvent::NewListenAddr { address, .. } => {
-                    println!("Local node is listening onNN {address}");
-                },
-                SwarmEvent::Behaviour(MyBehaviourEvent::Mdns(mdns::Event::Discovered(list))) => {
-                    for (peer_id, _multiaddr) in list {
-                        println!("mDNS discovered a new peer: {peer_id}");
-                       swarm.behaviour_mut().gossipsub.add_explicit_peer(&peer_id);
-                    }
-                },
-                SwarmEvent::Behaviour(MyBehaviourEvent::Mdns(mdns::Event::Expired(list))) => {
-                    for (peer_id, _multiaddr) in list {
-                        println!("mDNS discover peer has expired: {peer_id}");
-                        swarm.behaviour_mut().gossipsub.remove_explicit_peer(&peer_id);
-                    }
-                },
-                SwarmEvent::Behaviour(MyBehaviourEvent::Gossipsub(gossipsub::Event::Message {
-                    propagation_source: peer_id,
-                    message_id: id,
-                    message })) => {
-                        let message_struct:InputMessage = serde_json::from_slice(&message.data).unwrap();
-                        println!(
-                                "Got message: '{}' and timestamp: '{}'\n id: {id} \n peer: {peer_id}",
-                                &message_struct.message, &message_struct.timestamp
-                            );
-                },
-                _ => {
-                }
-            }
+            event = swarm.select_next_some() => handle_swarm_event(event, &mut swarm)
         }
     }
 }
+
 
 
 
