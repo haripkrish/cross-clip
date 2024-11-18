@@ -1,4 +1,3 @@
-use std::string::ToString;
 use libp2p::{gossipsub, mdns, Swarm};
 use libp2p::swarm::SwarmEvent;
 use crate::schema::message::InputMessage;

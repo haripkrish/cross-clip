@@ -1,4 +1,3 @@
-use std::error::Error;
 use std::time::Duration;
 
 use libp2p::{gossipsub, mdns, Swarm, SwarmBuilder};
@@ -36,8 +35,7 @@ pub fn initialize_swarm(mnemonic_string: &str) -> (Swarm<MyBehaviour>, String) {
 
     let gossipsub: Behaviour = Behaviour::new(
         gossipsub::MessageAuthenticity::Signed(keypair.clone()),
-        get_gossipsub_config()
-            .unwrap_or_else(|err| panic!("Failed to build gossipsub config: {:?}", err)),
+        get_gossipsub_config(),
     ).unwrap_or_else(|err| panic!("Failed to build gossipsub behaviour: {:?}", err));
 
     let mut swarm = SwarmBuilder::with_existing_identity(keypair.clone())
@@ -68,15 +66,14 @@ pub fn subscribe_to_topic(topic_id: &String, swarm: &mut Swarm<MyBehaviour>) {
                 panic!("Failed to subscribe: {:?}", err)
             }
         );
-    // println!("Connected peers: {}", swarm
-    //     .behaviour_mut().gossipsub.all_mesh_peers().count());
+    println!("Subscribed topics: {:?}", swarm.behaviour_mut().gossipsub.topics().count());
 }
 
-pub fn get_gossipsub_config() -> Result<Config, Box<dyn Error>> {
-    let gossipsub_config = gossipsub::ConfigBuilder::default()
+pub fn get_gossipsub_config() -> Config {
+    gossipsub::ConfigBuilder::default()
         .heartbeat_interval(Duration::from_secs(10)) // This is set to aid debugging by not cluttering the log space
         .validation_mode(gossipsub::ValidationMode::Strict) // This sets the kind of message validation. The default is Strict (enforce message signing)
         .build()
-        .map_err(|msg| io::Error::new(io::ErrorKind::Other, msg))?;
-    Ok(gossipsub_config)
+        .map_err(|msg| io::Error::new(io::ErrorKind::Other, msg))
+        .unwrap_or_else(|err| panic!("Failed to build GOSSIP config: {:?}", err))
 }
