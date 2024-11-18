@@ -6,11 +6,12 @@
 // Static analysis wrongly picks the IO variant, thus ignore this
 // ignore_for_file: argument_type_not_assignable
 
-import 'api/simple.dart';
+import 'api/main.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
+import 'schema/swarm_model.dart';
 
 abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustLibApiImplPlatform({
@@ -31,17 +32,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dco_decode_Map_String_list_Map_String_String(dynamic raw);
 
   @protected
-  RustStreamSink<int> dco_decode_StreamSink_i_32_Sse(dynamic raw);
-
-  @protected
-  RustStreamSink<NoteStorage> dco_decode_StreamSink_note_storage_Sse(
-      dynamic raw);
+  RustStreamSink<CustomResponseEvent>
+      dco_decode_StreamSink_custom_response_event_Sse(dynamic raw);
 
   @protected
   String dco_decode_String(dynamic raw);
 
   @protected
-  int dco_decode_i_32(dynamic raw);
+  CustomResponseEvent dco_decode_custom_response_event(dynamic raw);
 
   @protected
   List<Map<String, String>> dco_decode_list_Map_String_String(dynamic raw);
@@ -55,9 +53,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<(String, String)> dco_decode_list_record_string_string(dynamic raw);
-
-  @protected
-  NoteStorage dco_decode_note_storage(dynamic raw);
 
   @protected
   (String, List<Map<String, String>>)
@@ -85,18 +80,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  RustStreamSink<int> sse_decode_StreamSink_i_32_Sse(
-      SseDeserializer deserializer);
-
-  @protected
-  RustStreamSink<NoteStorage> sse_decode_StreamSink_note_storage_Sse(
-      SseDeserializer deserializer);
+  RustStreamSink<CustomResponseEvent>
+      sse_decode_StreamSink_custom_response_event_Sse(
+          SseDeserializer deserializer);
 
   @protected
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
-  int sse_decode_i_32(SseDeserializer deserializer);
+  CustomResponseEvent sse_decode_custom_response_event(
+      SseDeserializer deserializer);
 
   @protected
   List<Map<String, String>> sse_decode_list_Map_String_String(
@@ -115,9 +108,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  NoteStorage sse_decode_note_storage(SseDeserializer deserializer);
-
-  @protected
   (String, List<Map<String, String>>)
       sse_decode_record_string_list_map_string_string(
           SseDeserializer deserializer);
@@ -131,6 +121,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_decode_unit(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
   bool sse_decode_bool(SseDeserializer deserializer);
@@ -148,18 +141,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       Map<String, List<Map<String, String>>> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_StreamSink_i_32_Sse(
-      RustStreamSink<int> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_StreamSink_note_storage_Sse(
-      RustStreamSink<NoteStorage> self, SseSerializer serializer);
+  void sse_encode_StreamSink_custom_response_event_Sse(
+      RustStreamSink<CustomResponseEvent> self, SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
-  void sse_encode_i_32(int self, SseSerializer serializer);
+  void sse_encode_custom_response_event(
+      CustomResponseEvent self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_Map_String_String(
@@ -178,9 +168,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<(String, String)> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_note_storage(NoteStorage self, SseSerializer serializer);
-
-  @protected
   void sse_encode_record_string_list_map_string_string(
       (String, List<Map<String, String>>) self, SseSerializer serializer);
 
@@ -193,6 +180,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_unit(void self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_i_32(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_bool(bool self, SseSerializer serializer);
